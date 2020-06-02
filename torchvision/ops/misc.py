@@ -72,7 +72,7 @@ def _output_size(dim, input, size, scale_factor):
     ]
 
 
-def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corners=None):
+def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corners=None, recompute_scale_factor=True):
     # type: (Tensor, Optional[List[int]], Optional[float], str, Optional[bool]) -> Tensor
     """
     Equivalent to nn.functional.interpolate, but with support for empty batch sizes.
@@ -81,7 +81,7 @@ def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corne
     """
     if input.numel() > 0:
         return torch.nn.functional.interpolate(
-            input, size, scale_factor, mode, align_corners
+            input, size, scale_factor, mode, align_corners, recompute_scale_factor
         )
 
     output_shape = _output_size(2, input, size, scale_factor)

@@ -2,10 +2,10 @@ import random
 import math
 import torch
 from torch import nn, Tensor
-import torchvision
+import vision.torchvision as torchvision
 from torch.jit.annotations import List, Tuple, Dict, Optional
 
-from torchvision.ops import misc as misc_nn_ops
+from vision.torchvision.ops import misc as misc_nn_ops
 from .image_list import ImageList
 from .roi_heads import paste_masks_in_image
 
@@ -21,7 +21,7 @@ def _resize_image_and_masks_onnx(image, self_min_size, self_max_size, target):
 
     image = torch.nn.functional.interpolate(
         image[None], scale_factor=scale_factor, mode='bilinear',
-        align_corners=False)[0]
+        align_corners=False, recompute_scale_factor=True)[0]
 
     if target is None:
         return image, target
@@ -43,7 +43,7 @@ def _resize_image_and_masks(image, self_min_size, self_max_size, target):
         scale_factor = self_max_size / max_size
     image = torch.nn.functional.interpolate(
         image[None], scale_factor=scale_factor, mode='bilinear',
-        align_corners=False)[0]
+        align_corners=False, recompute_scale_factor=True)[0]
 
     if target is None:
         return image, target

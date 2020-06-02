@@ -3,8 +3,8 @@ import torch
 from torch.nn import functional as F
 from torch import nn, Tensor
 
-import torchvision
-from torchvision.ops import boxes as box_ops
+import vision.torchvision as torchvision
+from vision.torchvision.ops import boxes as box_ops
 
 from . import _utils as det_utils
 from .image_list import ImageList

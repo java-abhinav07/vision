@@ -1,13 +1,13 @@
 import torch
-import torchvision
+import vision.torchvision as torchvision
 
 import torch.nn.functional as F
 from torch import nn, Tensor
 
-from torchvision.ops import boxes as box_ops
-from torchvision.ops import misc as misc_nn_ops
+from vision.torchvision.ops import boxes as box_ops
+from vision.torchvision.ops import misc as misc_nn_ops
 
-from torchvision.ops import roi_align
+from vision.torchvision.ops import roi_align
 
 from . import _utils as det_utils
 
@@ -176,7 +176,7 @@ def _onnx_heatmaps_to_keypoints(maps, maps_i, roi_map_width, roi_map_height,
     height_correction = heights_i / roi_map_height
 
     roi_map = torch.nn.functional.interpolate(
-        maps_i[None], size=(int(roi_map_height), int(roi_map_width)), mode='bicubic', align_corners=False)[0]
+        maps_i[None], size=(int(roi_map_height), int(roi_map_width)), mode='bicubic', align_corners=False, recompute_scale_factor=True)[0]
 
     w = torch.scalar_tensor(roi_map.size(2), dtype=torch.int64)
     pos = roi_map.reshape(num_keypoints, -1).argmax(dim=1)
@@ -257,7 +257,7 @@ def heatmaps_to_keypoints(maps, rois):
         width_correction = widths[i] / roi_map_width
         height_correction = heights[i] / roi_map_height
         roi_map = torch.nn.functional.interpolate(
-            maps[i][None], size=(roi_map_height, roi_map_width), mode='bicubic', align_corners=False)[0]
+            maps[i][None], size=(roi_map_height, roi_map_width), mode='bicubic', align_corners=False, recompute_scale_factor=True)[0]
         # roi_map_probs = scores_to_probs(roi_map.copy())
         w = roi_map.shape[2]
         pos = roi_map.reshape(num_keypoints, -1).argmax(dim=1)
@@ -392,7 +392,7 @@ def paste_mask_in_image(mask, box, im_h, im_w):
     mask = mask.expand((1, 1, -1, -1))
 
     # Resize mask
-    mask = misc_nn_ops.interpolate(mask, size=(h, w), mode='bilinear', align_corners=False)
+    mask = misc_nn_ops.interpolate(mask, size=(h, w), mode='bilinear', align_corners=False, recompute_scale_factor=True)
     mask = mask[0][0]
 
     im_mask = torch.zeros((im_h, im_w), dtype=mask.dtype, device=mask.device)
@@ -420,7 +420,7 @@ def _onnx_paste_mask_in_image(mask, box, im_h, im_w):
     mask = mask.expand((1, 1, mask.size(0), mask.size(1)))
 
     # Resize mask
-    mask = torch.nn.functional.interpolate(mask, size=(int(h), int(w)), mode='bilinear', align_corners=False)
+    mask = torch.nn.functional.interpolate(mask, size=(int(h), int(w)), mode='bilinear', align_corners=False, recompute_scale_factor=True)
     mask = mask[0][0]
 
     x_0 = torch.max(torch.cat((box[0].unsqueeze(0), zero)))

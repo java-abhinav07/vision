@@ -1,8 +1,8 @@
 from collections import OrderedDict
 from torch import nn
-from torchvision.ops.feature_pyramid_network import FeaturePyramidNetwork, LastLevelMaxPool
+from vision.torchvision.ops.feature_pyramid_network import FeaturePyramidNetwork, LastLevelMaxPool
 
-from torchvision.ops import misc as misc_nn_ops
+from vision.torchvision.ops import misc as misc_nn_ops
 from .._utils import IntermediateLayerGetter
 from .. import resnet
 
