@@ -9,7 +9,7 @@ from vision.torchvision.ops import MultiScaleRoIAlign
 
 from ..utils import load_state_dict_from_url
 
-from .generalized_rcnn import GeneralizedRCNN
+from vision.torchvision.models.detection.generalized_rcnn import GeneralizedRCNN
 from .rpn import AnchorGenerator, RPNHead, RegionProposalNetwork
 from .roi_heads import RoIHeads
 from .transform import GeneralizedRCNNTransform
